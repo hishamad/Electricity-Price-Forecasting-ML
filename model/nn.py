@@ -3,22 +3,18 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
-
-class EnergyPricePredictor(nn.Module):
-    def __init__(self, input_size, hidden_size=64):
-        super(EnergyPricePredictor, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, 1)
+class EnergyPricePredictorLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size=64, num_layers=1, output_size=72):
+        super(EnergyPricePredictorLSTM, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, output_size)
         self.relu = nn.ReLU()
-        #self.dropout = nn.Dropout(0.2)
 
     def forward(self, x):
-        x = self.relu(self.fc1(x))
-        #x = self.dropout(x)
-        x = self.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
+        lstm_out, _ = self.lstm(x)
+        lstm_out = lstm_out[:, -1, :]  # Take the last timestep's output
+        out = self.fc(lstm_out)
+        return out
 
     def train_model(self, train_data, validation_data, labels, validation_labels, epochs=100, batch_size=32, learning_rate=0.001, patience=10):
         criterion = nn.MSELoss()
