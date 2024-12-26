@@ -73,3 +73,33 @@ class EnergyPricePredictorLSTM(nn.Module):
         plt.legend()
         plt.grid(True)
         plt.show()
+
+    def test_model(self, test_inputs, test_labels):
+        self.eval()
+        test_inputs = torch.tensor(test_inputs, dtype=torch.float32)
+        test_labels = torch.tensor(test_labels, dtype=torch.float32)
+
+        with torch.no_grad():
+            predictions = self(test_inputs)
+
+        predictions = predictions.numpy()
+        test_labels = test_labels.numpy()
+
+        mse = np.mean((predictions - test_labels) ** 2)
+        print(f"Test MSE: {mse:.4f}")
+
+        return predictions, mse
+
+    def plot_predictions(self, predictions, test_labels, num_days_to_plot=3):
+        num_hours = 24 * num_days_to_plot
+        plt.figure(figsize=(15, 6))
+        
+        plt.plot(test_labels[:num_hours].flatten(), label="Actual", color="blue", linewidth=1.5)
+        plt.plot(predictions[:num_hours].flatten(), label="Predicted", color="red", linestyle="--", linewidth=1.5)
+        
+        plt.xlabel("Hour")
+        plt.ylabel("Energy Price")
+        plt.title(f"Energy Price Predictions for {num_days_to_plot} Days")
+        plt.legend()
+        plt.grid(True)
+        plt.show()

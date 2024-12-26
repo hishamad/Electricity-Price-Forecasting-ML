@@ -15,6 +15,8 @@ import hopsworks
 import hsfs
 from pathlib import Path
 from datetime import datetime, timedelta
+import numpy as np
+
 
 def get_historical_weather(start_date,  end_date, latitude, longitude):
 
@@ -138,3 +140,21 @@ def fetch_data_for_today(ELECTRICITY_API_TOKEN):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
         return None
+    
+
+
+def create_time_series(data, input_window=7):
+    inputs, outputs = [], []
+    
+    energy_prices = data["energy_price"].values
+    
+    features = data.drop(columns=["energy_price"]).values
+
+    num_samples = len(data) - input_window
+
+    for i in range(num_samples):
+
+        inputs.append(features[i : i + input_window])
+        outputs.append(energy_prices[i + input_window])
+    
+    return np.array(inputs), np.array(outputs)
