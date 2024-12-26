@@ -4,7 +4,7 @@ import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
 class EnergyPricePredictorLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size=64, num_layers=1, output_size=72):
+    def __init__(self, input_size, hidden_size=64, num_layers=1, output_size=3):
         super(EnergyPricePredictorLSTM, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, output_size)
