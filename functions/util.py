@@ -172,7 +172,7 @@ def fetch_data_for_yesterday(ELECTRICITY_API_TOKEN):
         parsed_data = parse(data)
         print(parsed_data)
 
-        return data
+        return parsed_data
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
         return None
