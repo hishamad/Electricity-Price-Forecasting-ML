@@ -4,18 +4,20 @@ import time
 import requests
 import pandas as pd
 import json
-from geopy.geocoders import Nominatim
+#from geopy.geocoders import Nominatim
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.ticker import MultipleLocator
-import openmeteo_requests
-import requests_cache
-from retry_requests import retry
-import hopsworks
-import hsfs
+#import openmeteo_requests
+#import requests_cache
+#from retry_requests import retry
+#import hopsworks
+#import hsfs
 from pathlib import Path
 from datetime import datetime, timedelta
 import numpy as np
+import xml.etree.ElementTree as ET
+from io import BytesIO
 
 
 def get_historical_weather(start_date,  end_date, latitude, longitude):
@@ -65,9 +67,6 @@ def get_historical_weather(start_date,  end_date, latitude, longitude):
 
 
 
-import pandas as pd
-import os
-
 def process_energy_data():
     target_rows = [
         "Hydro Water Reservoir - Actual Aggregated [MW]",
@@ -113,7 +112,43 @@ def process_energy_data():
 
 
 
-def fetch_data_for_today(ELECTRICITY_API_TOKEN):
+def parse(data, target_psr_types=["B12", "B14", "B19", "B20"]):
+    root = ET.parse(BytesIO(data)).getroot()
+    ns = {'ns': 'urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0'}
+    psr_type_mapping = {
+        "B12": "hydro_mw",
+        "B14": "nuclear_mw",
+        "B19": "wind_mw",
+        "B20": "other_mw"
+    }
+    aggregated_data = {psr: {"total_quantity": 0, "count": 0} for psr in target_psr_types}
+
+    for times in root.findall('ns:TimeSeries', ns):
+        psrType = times.find('ns:MktPSRType/ns:psrType', ns).text
+        if psrType in target_psr_types:
+            for period in times.findall('ns:Period', ns):
+                for point in period.findall('ns:Point', ns):
+                    quantity = float(point.find('ns:quantity', ns).text)
+                    aggregated_data[psrType]["total_quantity"] += quantity
+                    aggregated_data[psrType]["count"] += 1
+
+    data_row = {
+        psr_type_mapping[psrType]: (
+            aggregated_data[psrType]["total_quantity"] / aggregated_data[psrType]["count"]
+            if aggregated_data[psrType]["count"] > 0 else 0
+        )
+        for psrType in target_psr_types
+    }
+
+    ordered_columns = ["hydro_mw", "nuclear_mw", "other_mw", "wind_mw"]
+    ordered_row = {col: data_row[col] for col in ordered_columns}
+
+    df = pd.DataFrame([ordered_row])
+    return df
+
+
+
+def fetch_data_for_yesterday(ELECTRICITY_API_TOKEN):
 
     base_url = "https://web-api.tp.entsoe.eu/api"
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -123,7 +158,7 @@ def fetch_data_for_today(ELECTRICITY_API_TOKEN):
     full_url = (
         f"{base_url}?"
         f"securityToken={ELECTRICITY_API_TOKEN}&"
-        f"documentType=A73&"
+        f"documentType=A75&"
         f"processType=A16&"
         f"in_Domain=10YSE-1--------K&"
         f"timeInterval={time_interval}"
@@ -134,7 +169,8 @@ def fetch_data_for_today(ELECTRICITY_API_TOKEN):
         response.raise_for_status()
         data = response.content
         print("Data fetched successfully:")
-        print(data)
+        parsed_data = parse(data)
+        print(parsed_data)
 
         return data
     except requests.exceptions.RequestException as e:
@@ -142,6 +178,8 @@ def fetch_data_for_today(ELECTRICITY_API_TOKEN):
         return None
     return None
 
+
+data = fetch_data_for_yesterday("7b1d1c52-5e50-41f2-a1aa-a9bc1a0ecae7")
 
 def get_el_price(date):
     el_price_df = pd.DataFrame()
