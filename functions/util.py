@@ -158,3 +158,23 @@ def create_time_series(data, input_window=7):
         outputs.append(energy_prices[i + input_window])
     
     return np.array(inputs), np.array(outputs)
+
+
+def get_el_price(date):
+    el_price_df = pd.DataFrame()
+    region = "SE3"
+    url = f'https://www.elprisetjustnu.se/api/v1/prices/{date.year}/{date.month:02}-{date.day:02}_{region}.json'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data_json = response.json()
+        price = 0
+        for item in data_json:  
+            price += item['SEK_per_kWh']
+        price /= len(data_json)
+
+        el_price_df['price'] = [price]
+        el_price_df['date'] = [date.strftime('%Y-%m-%d')]
+    else:
+        print(f"ELpris API Error")
+
+    return el_price_df
