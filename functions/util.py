@@ -4,15 +4,15 @@ import time
 import requests
 import pandas as pd
 import json
-#from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.ticker import MultipleLocator
-#import openmeteo_requests
-#import requests_cache
-#from retry_requests import retry
-#import hopsworks
-#import hsfs
+import openmeteo_requests
+import requests_cache
+from retry_requests import retry
+import hopsworks
+import hsfs
 from pathlib import Path
 from datetime import datetime, timedelta
 import numpy as np
@@ -64,6 +64,54 @@ def get_historical_weather(start_date,  end_date, latitude, longitude):
     daily_dataframe = daily_dataframe.dropna()
     return daily_dataframe
 
+
+def get_daily_weather(past_days, forecast_days, latitude, longitude):
+    cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
+    retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
+    openmeteo = openmeteo_requests.Client(session = retry_session)
+
+    # Make sure all required weather variables are listed here
+    # The order of variables in hourly or daily is important to assign them correctly below
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "daily": ["temperature_2m_mean", "precipitation_sum", "wind_speed_10m_max", "wind_direction_10m_dominant", "sunshine_duration"],
+        "past_days": past_days,
+        "forecast_days": forecast_days,
+    }
+    responses = openmeteo.weather_api(url, params=params)
+
+    # Process first location. Add a for-loop for multiple locations or weather models
+    response = responses[0]
+    print(f"Coordinates {response.Latitude()}°N {response.Longitude()}°E")
+    print(f"Elevation {response.Elevation()} m asl")
+    print(f"Timezone {response.Timezone()} {response.TimezoneAbbreviation()}")
+    print(f"Timezone difference to GMT+0 {response.UtcOffsetSeconds()} s")
+
+    # Process daily data. The order of variables needs to be the same as requested.
+    daily = response.Daily()
+    daily_temperature_2m_max = daily.Variables(0).ValuesAsNumpy()
+    daily_sunshine_duration = daily.Variables(1).ValuesAsNumpy()
+    daily_precipitation_sum = daily.Variables(2).ValuesAsNumpy()
+    daily_wind_speed_10m_max = daily.Variables(3).ValuesAsNumpy()
+    daily_wind_direction_10m_dominant = daily.Variables(4).ValuesAsNumpy()
+
+    daily_data = {"date": pd.date_range(
+        start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
+        end = pd.to_datetime(daily.TimeEnd(), unit = "s", utc = True),
+        freq = pd.Timedelta(seconds = daily.Interval()),
+        inclusive = "left"
+    )}
+    daily_data["temperature_2m_max"] = daily_temperature_2m_max
+    daily_data["sunshine_duration"] = daily_sunshine_duration
+    daily_data["precipitation_sum"] = daily_precipitation_sum
+    daily_data["wind_speed_10m_max"] = daily_wind_speed_10m_max
+    daily_data["wind_direction_10m_dominant"] = daily_wind_direction_10m_dominant
+
+    daily_dataframe = pd.DataFrame(data = daily_data)
+    print(daily_dataframe)
+    return(daily_dataframe)
 
 
 
@@ -178,8 +226,6 @@ def fetch_data_for_yesterday(ELECTRICITY_API_TOKEN):
         return None
     return None
 
-
-data = fetch_data_for_yesterday("7b1d1c52-5e50-41f2-a1aa-a9bc1a0ecae7")
 
 def get_el_price(date):
     el_price_df = pd.DataFrame()
