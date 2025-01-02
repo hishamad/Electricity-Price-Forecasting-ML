@@ -91,11 +91,11 @@ def get_daily_weather(past_days, forecast_days, latitude, longitude):
 
     # Process daily data. The order of variables needs to be the same as requested.
     daily = response.Daily()
-    daily_temperature_2m_max = daily.Variables(0).ValuesAsNumpy()
-    daily_sunshine_duration = daily.Variables(1).ValuesAsNumpy()
-    daily_precipitation_sum = daily.Variables(2).ValuesAsNumpy()
-    daily_wind_speed_10m_max = daily.Variables(3).ValuesAsNumpy()
-    daily_wind_direction_10m_dominant = daily.Variables(4).ValuesAsNumpy()
+    daily_temperature_2m_mean = daily.Variables(0).ValuesAsNumpy()
+    daily_precipitation_sum = daily.Variables(1).ValuesAsNumpy()
+    daily_wind_speed_10m_max = daily.Variables(2).ValuesAsNumpy()
+    daily_wind_direction_10m_dominant = daily.Variables(3).ValuesAsNumpy()
+    daily_sunshine_duration = daily.Variables(4).ValuesAsNumpy()
 
     daily_data = {"date": pd.date_range(
         start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
@@ -103,7 +103,7 @@ def get_daily_weather(past_days, forecast_days, latitude, longitude):
         freq = pd.Timedelta(seconds = daily.Interval()),
         inclusive = "left"
     )}
-    daily_data["temperature_2m_max"] = daily_temperature_2m_max
+    daily_data["temperature_2m_mean"] = daily_temperature_2m_mean
     daily_data["sunshine_duration"] = daily_sunshine_duration
     daily_data["precipitation_sum"] = daily_precipitation_sum
     daily_data["wind_speed_10m_max"] = daily_wind_speed_10m_max
