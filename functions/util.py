@@ -1,21 +1,21 @@
 import os
 import datetime
-import time
+# import time
 import requests
 import pandas as pd
-import json
-from geopy.geocoders import Nominatim
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
-from matplotlib.ticker import MultipleLocator
+# import json
+# from geopy.geocoders import Nominatim
+# import matplotlib.pyplot as plt
+# from matplotlib.patches import Patch
+# from matplotlib.ticker import MultipleLocator
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
-import hopsworks
-import hsfs
-from pathlib import Path
+# import hopsworks
+# import hsfs
+# from pathlib import Path
 from datetime import datetime, timedelta
-import numpy as np
+# import numpy as np
 import xml.etree.ElementTree as ET
 from io import BytesIO
 
