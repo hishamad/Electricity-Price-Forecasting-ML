@@ -3,7 +3,7 @@ name: price-prediction-daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: "13 13 * * *"
+    - cron: "06 06 * * *"
 
 jobs:
   schedule_pipelines:
