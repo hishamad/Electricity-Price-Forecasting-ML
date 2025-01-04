@@ -5,7 +5,7 @@ pandas
 
 # Hopsworks SDK
 hopsworks
-
+hopsworks[python]
 # Data Visualization
 matplotlib==3.8.3
 
