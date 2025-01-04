@@ -9,8 +9,6 @@ hopsworks
 # Data Visualization
 matplotlib
 
-# JSON handling
-json
 
 # # Regular Expressions
 # re
