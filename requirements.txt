@@ -9,21 +9,10 @@ hopsworks
 # Data Visualization
 matplotlib==3.8.3
 
-
-# # Regular Expressions
-# re
-
-# OS operations
-os
 python-dotenv
 
-# Warnings management
-warnings
-
 # Machine Learning Frameworks
-torch           # PyTorch
-tensorflow      # TensorFlow
-keras           # Keras
+torch        
 xgboost==2.0.3
 scikit-learn==1.4.1.post1
 
