@@ -30,7 +30,7 @@ jobs:
       - name: execute python workflows from bash script
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-          ELECTRICITY_API_TOKEN: ${{ secrets.ELECTRICITY_API_TOKEN }}
+          ELECTRICTY_MAP_API_KEY: ${{ secrets.ELECTRICTY_MAP_API_KEY }}
         run: |
           cd notebooks
           jupyter nbconvert --to notebook --execute daily_feature_pipeline.ipynb
