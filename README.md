@@ -42,4 +42,5 @@ Then: <br>
 - Create a .env file for API keys and add this code: <br>
   - HOPSWORK_API_KEY="hopsworks_key_here" <br>
   - ELECTRICTY_MAP_API_KEY="entso_key_here" <br>
+-Then run the pipelines in the same order as they come in the above description
 
