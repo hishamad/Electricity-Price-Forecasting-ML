@@ -8,7 +8,7 @@ The prediction problem targeted in this project is electricity price forecasting
 There are four main data sources used in this project: 
 - **Elpris**, which provides historical and real-time hourly electricity price data in Sweden. The data is divided into four geographical regions in Sweden: SE1, SE2, SE3 and SE4, which is the standard division used by all entities working with electricity in Sweden. As Stockholm is located in SE3, the data used in this project is only from this region. The prices are provided in both Euro and SEK but only prices in SEK are used here. As the hourly electricity prices vary too much between day and night, making it too complex for a machine learning model to learn, the data is combined into a daily average instead to make the prediction problem simpler.
 - **Electricity Maps**,
-- **Open-meteo**, which provides historical and real-time weather data. The data used includes only relevant features for this prediction problem such temperature, wind speed, precipitation, wind direction and sunshine duration.
+- **Open-meteo**, which provides historical and real-time weather data. The data used includes only relevant features for this prediction problem such as temperature, wind speed, precipitation, wind direction and sunshine duration.
 - **ENTSO-e**
 ## Solution Description 
 The system architecture used in this project consists of four main pipelines that can be found in the notebooks folder:
