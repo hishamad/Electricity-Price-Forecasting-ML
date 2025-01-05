@@ -21,16 +21,16 @@ The system architecture used in this project consists of four main pipelines tha
 about GUI and model monitoring ... 
 
 ## How to run
-Prerequisites
-Setup a Hopswork account and create a new project
-Generate an a hopswork API key
-For ENTSO-e you need to create an account and send an email request for an API key (might take a couple of days before they respond).
+Prerequisites: <br>
+Setup a Hopswork account and create a new project <br>
+Generate an a hopswork API key <br>
+For ENTSO-e you need to create an account and send an email request for an API key (might take a couple of days before they respond). <br>
 
-Then:
-git clone https://github.com/hishamad/Electricity-Price-Forecasting-ML.git
-cd your-location
-pip install -r requirements.txt
-Create a .env file for API keys and add this code:
-HOPSWORK_API_KEY="hopswork_key_here"
-ELECTRICTY_MAP_API_KEY="entso_key_here"
+Then: <br>
+git clone https://github.com/hishamad/Electricity-Price-Forecasting-ML.git <br>
+cd your-location <br>
+pip install -r requirements.txt <br>
+Create a .env file for API keys and add this code: <br>
+HOPSWORK_API_KEY="hopswork_key_here" <br>
+ELECTRICTY_MAP_API_KEY="entso_key_here" <br>
 
