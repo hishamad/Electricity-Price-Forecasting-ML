@@ -19,3 +19,5 @@ The system architecture used in this project consists of four main pipelines tha
 
 ## Results 
 about GUI and model monitoring ... 
+
+## How to run
