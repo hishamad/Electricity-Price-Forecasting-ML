@@ -18,19 +18,28 @@ The system architecture used in this project consists of four main pipelines tha
 - **Dashboard**: This dashboards purpose was to show the predicted values and true values over time to users. It is built as an Huggingface Space at this link [dashboard](https://huggingface.co/spaces/SWAH-KTH/el_price_predictions). Functionality wise it fetches the predicted values and true electricity price from Hopsworks that are created in the daily feature and inference pipelines. It then creates a graph and table to make it viewable to interested users.
 
 ## Results 
-about GUI and model monitoring ... 
+Here are the final training results of the LSTM and XGBoost models after hyperparameter fine-tuning
+| Models | MSE  | #2  |
+| ------- | --- | --- |
+| LSTM | 0.067 | -1.675 |
+| XGBoost | 0.074 | 0.572 |
 
+Based on these results the XGBoost model was chosen to perform the prediction in the application. 
+
+Here is a snapshot from the GUI where the predictions are being displayed and monitored:
+![image](https://github.com/user-attachments/assets/3f3b64bd-4389-4357-a1e4-01fca58da41f)
+ 
 ## How to run
 Prerequisites: <br>
-Setup a Hopsworks account and create a new project <br>
-Generate an Hopsworks API key <br>
-For ENTSO-e you need to create an account and send an email request for an API key (might take a couple of days before they respond). <br>
+- Setup a Hopsworks account and create a new project <br>
+- Generate an Hopsworks API key <br>
+- For ENTSO-e you need to create an account and send an email request for an API key (might take a couple of days before they respond). <br>
 
 Then: <br>
-git clone https://github.com/hishamad/Electricity-Price-Forecasting-ML.git <br>
-cd your-location <br>
-pip install -r requirements.txt <br>
-Create a .env file for API keys and add this code: <br>
-HOPSWORK_API_KEY="hopsworks_key_here" <br>
-ELECTRICTY_MAP_API_KEY="entso_key_here" <br>
+- git clone https://github.com/hishamad/Electricity-Price-Forecasting-ML.git <br>
+- cd your-location <br>
+- pip install -r requirements.txt <br>
+- Create a .env file for API keys and add this code: <br>
+  - HOPSWORK_API_KEY="hopsworks_key_here" <br>
+  - ELECTRICTY_MAP_API_KEY="entso_key_here" <br>
 
