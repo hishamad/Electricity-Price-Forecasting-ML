@@ -19,7 +19,7 @@ The system architecture used in this project consists of four main pipelines tha
 
 ## Results 
 Here are the final training results of the LSTM and XGBoost models after hyperparameter fine-tuning
-| Models | MSE  | #2  |
+| Models | MSE  | R^2 |
 | ------- | --- | --- |
 | LSTM | 0.067 | -1.675 |
 | XGBoost | 0.074 | 0.572 |
