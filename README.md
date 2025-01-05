@@ -28,7 +28,13 @@ Based on these results the XGBoost model was chosen to perform the prediction in
 
 Here is a snapshot from the GUI where the predictions are being displayed and monitored:
 ![image](https://github.com/user-attachments/assets/3f3b64bd-4389-4357-a1e4-01fca58da41f)
- 
+
+
+## Future Work
+- Gain more data. The amount of data we could collect from our Elpris API was only daily from today back to November 2022 which only allowed us to get around 900-1000 datapoints. With that said training could be improved with more data, and also being able to do a validation set and tune hyperparameters more efficiently.
+- Work more with the models. We want to test more on different ML architectures and see how applicable they are to this problem and improve the performance.
+- Forecast the electricity price for more days into the future.
+
 ## How to run
 Prerequisites: <br>
 - Setup a Hopsworks account and create a new project <br>
